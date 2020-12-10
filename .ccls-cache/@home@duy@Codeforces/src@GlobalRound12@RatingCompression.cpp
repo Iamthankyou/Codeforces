@@ -20,6 +20,8 @@ template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p
 	return cin >> p.second;
 }
 
+#define duy_local
+
 mt19937 rng(std::chrono::steady_clock::now().time_since_epoch().count());
 
 void usaco(string filename) {
@@ -30,102 +32,107 @@ void usaco(string filename) {
 const lld pi = 3.14159265358979323846;
 const ll mod = 1000000007;
 
-#define duy_local
+int arr[300000];
+int st[4*300000];
+int cnt[300000];
 
-void solve() {
-	int n;
-	cin >> n;
-	vector<string> v(n);
-
-	for (int i=0; i<n; i++){
-		cin >> v[i];
+void update(int id ,int l, int r, int i, int v){
+	if (i<l || r<i){
+		return;
 	}
 
-	char boardsO[3][n][n];
-	char boardsX[3][n][n];
-
-	for (int x=0; x<n; x++){
-		for (int y=0; y<n; y++){
-			for (int i=0; i<3; i++){
-				boardsX[i][x][y] = v[x][y];
-				boardsO[i][x][y] = v[x][y];
-			}
-		}
+	if (l==r){
+		st[id] = v;
+		return;
 	}
 
-	int changesX[3];
-	int changesO[3];
-	int k = 0;
+	int mid = (l+r)/2;
+	update(id*2,l,mid,i,v);
+	update(id*2+1,mid+1,r,i,v);
 
-	memset(changesX,0,sizeof(changesX));
-	memset(changesO,0,sizeof(changesO));
-
-	for (int x=0; x<n; x++){
-		for (int y=0; y<n; y++){
-			if (v[x][y]=='.'){
-				continue;
-			}
-
-			if (v[x][y]=='X'){
-				changesO[(x+y)%3]++;
-				boardsO[(x+y)%3][x][y] = 'O';
-			}
-			else{
-				changesX[(x+y)%3]++;
-				boardsX[(x+y)%3][x][y] = 'X';
-			}
-
-			k++;
-		}
-	}
-
-	int minChanges = INT_MAX;
-
-	for (int i=0; i<3; i++){
-		for (int j=0; j<3; j++){
-			if (i==j){
-				continue;
-			}
-
-			if (changesO[i]+changesX[j]<=(int)k/3){
-				minChanges = min(minChanges,changesO[i]+changesX[j]);
-			}
-		}
-	}
-
-	for (int i=0; i<3; i++){
-		for (int j=0; j<3; j++){
-			if (i==j){
-				continue;
-			}
-
-			if (changesO[i]+changesX[j]==minChanges){
-				for (int x=0; x<n; x++){
-					for (int y=0; y<n; y++){
-						if (v[x][y]=='.'){
-							cout << ".";
-						}
-						else if ((x+y)%3==i){
-							cout << boardsO[(x+y)%3][x][y];
-						}
-						else if ((x+y)%3==j){
-							cout << boardsX[(x+y)%3][x][y];
-						}
-						else{
-							cout << v[x][y];
-						}
-					}
-					cout << "\n";
-				}
-				return;
-			}
-
-		}
-	}
-
+	st[id] = min(st[id*2],st[id*2+1]);
 }
 
-int main() {
+int get(int id, int l, int r, int u, int v){
+	if (v<l || r<u){
+		return INT_MAX;
+	}
+
+	if (u<=l && r<=v){
+		return st[id];
+	}
+
+	int mid = (l+r)/2;
+
+	return min(get(id*2,l,mid,u,v),get(id*2+1,mid+1,r,u,v));
+}
+
+void solve() {
+	memset(arr,0,sizeof(arr));
+	memset(st,0,sizeof(st));
+	memset(cnt,0,sizeof(cnt));
+
+	int n;
+	cin >> n;
+	int p=0;
+
+	bool ans[n+1];
+	memset(ans,false,sizeof(ans));
+
+	for (int i=1; i<=n ;i++){
+		cin >> arr[i];
+		cnt[arr[i]]++;
+		update(1,1,n,i,arr[i]);
+	}
+
+	while (cnt[p+1]==1){
+		p++;
+	}
+
+	ans[1] = p == n;
+
+	ans[n] = cnt[1]>0;
+
+	bool flag = true;
+
+	if (ans[n]){
+		int r =n,l=1;
+
+		for (int i=1; i<=n; i++){
+			if ((arr[r]==i || arr[l]==i)){
+			 	if (arr[l]==i) l++;
+				if (arr[r]==i) r--;
+
+				int min2 = get(1,1,n,l,r);
+				if (min2!=i+1 && min2!=INT_MAX){
+					cout << i << " " << l << ":" << r << " " << min2 << " ";
+					for (int j=2; j<=n-i+1; j++){
+						ans[j]=false;
+					}
+
+					for (int j=n-i+2; j<=n; j++){
+						ans[j]=true;
+					}
+					break;
+				}
+			}
+			else{
+				break;
+			}
+
+		}
+
+	}
+
+
+	for (int i=1; i<=n; i++){
+		cout << ans[i];
+	}
+
+	cout << "\n";
+}
+
+int main(){
 	#ifdef duy_local
 		auto begin = std::chrono::high_resolution_clock::now();
 	#endif

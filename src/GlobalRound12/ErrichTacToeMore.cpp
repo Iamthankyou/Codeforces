@@ -44,21 +44,33 @@ void solve() {
 	char boardsO[3][n][n];
 	char boardsX[3][n][n];
 
+	char boardsOO[3][n][n];
+	char boardsXX[3][n][n];
+
 	for (int x=0; x<n; x++){
 		for (int y=0; y<n; y++){
 			for (int i=0; i<3; i++){
 				boardsX[i][x][y] = v[x][y];
 				boardsO[i][x][y] = v[x][y];
+
+				boardsXX[i][x][y] = v[x][y];
+				boardsOO[i][x][y] = v[x][y];
 			}
 		}
 	}
 
 	int changesX[3];
 	int changesO[3];
+
+	int changesXX[3];
+	int changesOO[3];
+
 	int k = 0;
 
 	memset(changesX,0,sizeof(changesX));
 	memset(changesO,0,sizeof(changesO));
+	memset(changesXX,0,sizeof(changesX));
+	memset(changesOO,0,sizeof(changesO));
 
 	for (int x=0; x<n; x++){
 		for (int y=0; y<n; y++){
@@ -69,10 +81,17 @@ void solve() {
 			if (v[x][y]=='X'){
 				changesO[(x+y)%3]++;
 				boardsO[(x+y)%3][x][y] = 'O';
+
+				changesOO[x%3]++;
+				boardsOO[x%3][x][y] = 'O';
+
 			}
 			else{
 				changesX[(x+y)%3]++;
 				boardsX[(x+y)%3][x][y] = 'X';
+
+				changesXX[x%3]++;
+				boardsXX[x%3][x][y] = 'X';
 			}
 
 			k++;
@@ -81,45 +100,68 @@ void solve() {
 
 	int minChanges = INT_MAX;
 
+	int i1,j1,ii1,jj1;
+
 	for (int i=0; i<3; i++){
 		for (int j=0; j<3; j++){
-			if (i==j){
-				continue;
-			}
+			for (int ii=0; ii<3; ii++){
+				for (int jj=0; jj<3; jj++){
+					if (i==j || ii==jj){
+						continue;
+					}
 
-			if (changesO[i]+changesX[j]<=(int)k/3){
-				minChanges = min(minChanges,changesO[i]+changesX[j]);
+					if (changesO[i]+changesX[j]+changesOO[ii]+changesXX[jj]<=(int)k){
+						if (changesO[i]+changesX[j]+changesOO[ii]+changesXX[jj]<minChanges){
+							i1=i;
+							j1=j;
+							ii1=ii;
+							jj1=jj;
+						}
+						minChanges = min(minChanges,changesO[i]+changesX[j]+changesOO[ii]+changesXX[jj]);
+					}
+				}
 			}
 		}
 	}
 
+	cout << minChanges << " " << i1 << " " << j1 << " " << ii1 << " " << jj1 << "\n";
+
 	for (int i=0; i<3; i++){
 		for (int j=0; j<3; j++){
-			if (i==j){
-				continue;
-			}
-
-			if (changesO[i]+changesX[j]==minChanges){
-				for (int x=0; x<n; x++){
-					for (int y=0; y<n; y++){
-						if (v[x][y]=='.'){
-							cout << ".";
-						}
-						else if ((x+y)%3==i){
-							cout << boardsO[(x+y)%3][x][y];
-						}
-						else if ((x+y)%3==j){
-							cout << boardsX[(x+y)%3][x][y];
-						}
-						else{
-							cout << v[x][y];
-						}
+			for (int ii=0; ii<3; ii++){
+				for (int jj=0; jj<3; jj++){
+					if (i==j || ii==jj){
+						continue;
 					}
-					cout << "\n";
-				}
-				return;
-			}
 
+					if (changesO[i]+changesX[j]+changesOO[ii]+changesXX[jj]==minChanges){
+						for (int x=0; x<n; x++){
+							for (int y=0; y<n; y++){
+								if (v[x][y]=='.'){
+									cout << ".";
+								}
+								else if ((x+y)%3==i && x%3!=ii && x%3!=jj){
+									cout << boardsO[(x+y)%3][x][y];
+								}
+								else if ((x+y)%3==j && x%3!=ii && x%3!=jj){
+									cout << boardsX[(x+y)%3][x][y];
+								}
+								else if (x%3==ii){
+									cout << boardsOO[(x+y)%3][x][y];
+								}
+								else if (x%3==jj){
+									cout << boardsXX[(x+y)%3][x][y];
+								}
+								else{
+									cout << v[x][y];
+								}
+							}
+							cout << "\n";
+						}
+						return;
+					}
+				}
+			}
 		}
 	}
 

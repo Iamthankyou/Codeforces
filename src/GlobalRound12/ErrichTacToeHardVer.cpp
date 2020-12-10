@@ -30,7 +30,7 @@ void usaco(string filename) {
 const lld pi = 3.14159265358979323846;
 const ll mod = 1000000007;
 
-#define duy_online
+#define duy_local
 
 void solve() {
 	int n;
@@ -137,16 +137,17 @@ int main() {
 		usaco("duy");
 	#endif
 
-	#ifdef duy_local
-		auto end = std::chrono::high_resolution_clock::now();
-		cout << setprecision(4) << fixed;
-		cout << "Execution time: " << std::chrono::duration_cast<std::chrono::duration<double>>(end - begin).count() << " seconds" << endl;
-	#endif
-
 	int t;
 	cin >> t;
 
 	while (t--){
 		solve();
 	}
+
+	#ifdef duy_local
+		auto end = std::chrono::high_resolution_clock::now();
+		cout << setprecision(4) << fixed;
+		cout << "Execution time: " << std::chrono::duration_cast<std::chrono::duration<double>>(end - begin).count() << " seconds" << endl;
+	#endif
+
 }
