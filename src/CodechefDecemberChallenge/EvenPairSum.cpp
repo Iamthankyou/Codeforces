@@ -33,14 +33,39 @@ const lld pi = 3.14159265358979323846;
 const ll mod = 1000000007;
 
 void solve() {
-	int a,b;
-	cin >> a >> b;
-	int cntOddA = a/2 + (a%2!=0);
-	int cntOddB = b/2 + (b%2!=0);
-	int cntEvenA = a/2;
-	int cntEvenB = b/2;
+	int n,k;
+	cin >> n >> k;
+	int arr[n];
+	int cnt80=0, cnt9=0,cnt=0;
 
-	cout << (ull)(cntOddA*cntOddB + cntEvenA*cntEvenB) << "\n";
+	for (int i=0; i<n; i++){
+		cin >> arr[i];
+		arr[i]>=80?cnt80++:arr[i]<=9?cnt9++:cnt++;
+	}
+
+	int d = 0;
+
+	while (cnt80>0 || cnt9>0 || cnt>0){
+		d++;
+
+		if (cnt80>0 || cnt9>0){
+			int t = k;
+			while (t>0 && cnt80>0){
+				t--;
+				cnt80--;
+			}
+
+			while(t>0 && cnt9>0){
+				t--;
+				cnt9--;
+			}
+		}
+		else{
+			cnt-=k;
+		}
+	}
+
+	cout << d << "\n";
 }
 
 int main() {
