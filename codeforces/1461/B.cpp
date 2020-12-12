@@ -33,7 +33,7 @@ const lld pi = 3.14159265358979323846;
 const ll mod = 1000000007;
 
 int min(int a, int b, int c){
-	return a<b&&a<c?a:b<c?b:c;
+	return a<b?a:b<c?b:c;
 }
 
 void solve() {
@@ -52,7 +52,7 @@ void solve() {
        for (int i = n; i>=1; i--) {
            for (int j = m; j>=1; j--) {
                if (!block[i][j]) continue;
-               dp[i][j]=block[i][j]+min(dp[i+1][j],dp[i+1][j-1], dp[i+1][j+1]);
+               dp[i][j]=block[i][j]+min(dp[i+1][j],min(dp[i+1][j-1], dp[i+1][j+1]));
                ans+=dp[i][j];
            }
        }
