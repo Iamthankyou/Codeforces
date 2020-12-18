@@ -1,4 +1,21 @@
 {
+  "CF101670325": {
+    "contest_id": 1462,
+    "language": "Python 3",
+    "path": "codeforces/1462/B.py",
+    "problem_index": "B",
+    "problem_name": "Last Year's Substring",
+    "problem_url": "https://codeforces.com/contest/1462/problem/B",
+    "submission_id": "CF101670325",
+    "submission_url": "https://codeforces.com/contest/1462/submission/101670325",
+    "tags": [
+      "dp",
+      "implementation",
+      "strings",
+      "*800"
+    ],
+    "timestamp": "Dec/19/2020 01:40"
+  },
   "CF101686346": {
     "contest_id": 1462,
     "language": "Python 3",
