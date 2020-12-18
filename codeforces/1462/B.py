@@ -1,26 +1,5 @@
 import re
 
-def solve2():
-    n = int(input())
-    s = input()
-    target = "2020"
-
-    for i in range(0,len(target)+1):
-        flag = True
-        for l in range(0,i):
-            if target[l]!=s[l]:
-                flag = False
-                break
-        if flag == True:
-            for r in range(0,len(target)-i):
-                if target[r]!=s[r]:
-                    flag = False
-                    break
-        if flag == True:
-            print("YES")
-            return
-    print("NO")
-
 def solve():
     n = int(input())
     s = '.'
