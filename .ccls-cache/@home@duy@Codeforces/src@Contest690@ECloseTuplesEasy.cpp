@@ -33,22 +33,29 @@ const lld pi = 3.14159265358979323846;
 const ll mod = 1000000007;
 
 void solve() {
-	int k,n;
-	cin >> n >> k;
+	int n;
+	cin >> n;
+	int cnt[n+5];
+	memset(cnt,0,sizeof(cnt));
+	int arr[n];
 
 	for (int i=0; i<n; i++){
-		if (i%3==0){
-			cout << 'a';
-		}
-		else if (i%3==1){
-			cout << 'b';
-		}
-		else{
-			cout << 'c';
-		}
+		cin >> arr[i];
+		cnt[arr[i]]++;
 	}
 
-	cout << "\n";
+	ull ans = 0;
+
+	for (int i=0; i<n+2; i++){
+		ans+=cnt[i]*(cnt[i]-1)*(cnt[i]-2)/6;
+		ans+=cnt[i]*cnt[i+1]*cnt[i+2];
+		ans+=cnt[i]*cnt[i+1]*(cnt[i+1]-1)/2;
+		ans+=cnt[i]*(cnt[i]-1)/2*cnt[i+1];
+		ans+=cnt[i]*cnt[i+2]*(cnt[i+2]-1)/2;
+		ans+=cnt[i]*(cnt[i]-1)/2*cnt[i+2];
+	}
+
+	cout << ans << "\n";
 }
 
 int main() {
